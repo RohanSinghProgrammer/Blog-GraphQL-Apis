@@ -16,6 +16,11 @@ app.use(cors())
 // connect with MongoDB
 mongoose.connect('mongodb+srv://admin:admin123456@cluster0.uappo.mongodb.net/blog').then(()=> console.log('DB Connected!')).catch(e => console.log(e.message))
 
+// initial api end point
+app.get('/',(req,res)=>{
+    return res.status(200).json({"message": "type /graphql on url to access the GraphQL apis also Graphiql is enabled so you can test it out there :)"})
+})
+
 
 // super charged end point for graphQL
 app.use('/graphql', graphqlHTTP({
