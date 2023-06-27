@@ -48,7 +48,7 @@ const RootQueryType = new GraphQLObjectType({
 const MutationType = new GraphQLObjectType({
   name: "Mutation",
   fields: {
-    user: {
+    addUser: {
       type: UserType,
       args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
@@ -61,7 +61,30 @@ const MutationType = new GraphQLObjectType({
         return user.save();
       },
     },
-    post: {
+    updateUser: {
+      type: UserType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+        name: { type: GraphQLString },
+        photoUrl: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        let { id, name, photoUrl } = args;
+        return UserModel.findByIdAndUpdate(
+          id,
+          { name, photoUrl },
+          { new: true }
+        );
+      },
+    },
+    deleteUser: {
+      type: UserType,
+      args: { id: { type: new GraphQLNonNull(GraphQLID) } },
+      resolve(parent, args) {
+        return UserModel.findByIdAndDelete(args.id);
+      },
+    },
+    addPost: {
       type: PostType,
       args: {
         authorId: { type: new GraphQLNonNull(GraphQLID) },
@@ -76,7 +99,33 @@ const MutationType = new GraphQLObjectType({
         return post.save();
       },
     },
-    comment: {
+    updatePost: {
+      type: PostType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+        title: { type: GraphQLString },
+        desc: { type: GraphQLString },
+        photoUrl: { type: GraphQLString },
+        category: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        let { id, title, desc, photoUrl, category } = args;
+        return PostModel.findByIdAndUpdate(id, {
+          title,
+          desc,
+          photoUrl,
+          category,
+        });
+      },
+    },
+    deletePost: {
+      type: PostType,
+      args: { id: { type: new GraphQLNonNull(GraphQLID) } },
+      resolve(parent, args) {
+        return PostModel.findByIdAndDelete(args.id);
+      },
+    },
+    addComment: {
       type: CommentType,
       args: {
         comment: { type: new GraphQLNonNull(GraphQLString) },
@@ -87,6 +136,24 @@ const MutationType = new GraphQLObjectType({
         let { comment, userId, postId } = args;
         let cmnt = new CommentModel({ comment, userId, postId });
         return cmnt.save();
+      },
+    },
+    updateComment: {
+      type: CommentType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+        comment: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        let { id, comment } = args;
+        return CommentModel.findByIdAndUpdate(id, { comment }, {new: true});
+      },
+    },
+    deleteComment: {
+      type: CommentType,
+      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
+      resolve(parent, args) {
+        return CommentModel.findByIdAndDelete(args.id);
       },
     },
   },
