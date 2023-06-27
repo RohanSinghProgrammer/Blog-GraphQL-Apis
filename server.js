@@ -3,6 +3,7 @@ import { graphqlHTTP } from "express-graphql";
 import cors from "cors"
 import schema from './schema/RootSchema.js'
 import mongoose from "mongoose";
+import 'dotenv/config'
 
 
 // initialize global variables
@@ -14,7 +15,7 @@ app.use(express.json())
 app.use(cors())
 
 // connect with MongoDB
-mongoose.connect('mongodb+srv://admin:admin123456@cluster0.uappo.mongodb.net/blog').then(()=> console.log('DB Connected!')).catch(e => console.log(e.message))
+mongoose.connect(process.env.MONGO_URI).then(()=> console.log('DB Connected!')).catch(e => console.log(e.message))
 
 // initial api end point
 app.get('/',(req,res)=>{
